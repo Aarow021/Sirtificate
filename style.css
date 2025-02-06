@@ -1,0 +1,33 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    width: 100%;
+    height: 10rem;
+    background-color: black;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    gap: 15rem;
+    max-width: 1440px;
+    margin: auto;
+}
+
+button {
+    background-color: #242424;
+    font-size: 2rem;
+    border-radius: 20px;
+    border: solid 1px rgba(255, 255, 255, 0.25);
+    color: white;
+    padding: 1rem 2rem;
+    min-width: 20rem;
+    cursor: pointer;
+}
+
