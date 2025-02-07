@@ -3,59 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sirtificates</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Kaisei+Decol&family=Meddon&family=MonteCarlo&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="page-wrapper">
         <header>
             <nav>
-                <button>Sleep Deprivation</button>
-                <button>Roll</button>
-                <button>Brain Rot</button>
+                <button id="sleep">Sleep Deprived</button>
+                <button id="roll">Roll</button>
+                <button id="brain">Brain Rot</button>
             </nav>
         </header>
         <main>
             <form id="certificate-customization">
                 <div class="input-container">
                     <label for="input-issuer">Issuer</label>
-                    <input type="text" placeholder="" id="input-issuer">
+                    <input type="text" placeholder="Type here" id="input-issuer">
                 </div>
                 <div class="input-container">
                     <label for="input-recipient">Recipient</label>
-                    <input type="text" placeholder="" id="input-recipient">
+                    <input type="text" placeholder="Type here" id="input-recipient">
                 </div>
                 <div class="input-container">
                     <label for="input-date">Date</label>
-                    <input type="text" placeholder="" id="input-date">
+                    <input type="date" placeholder="Type here" id="input-date">
                 </div>
                 <div class="input-container">
                     <label for="input-title">Title</label>
-                    <input type="text" placeholder="" id="input-title">
+                    <input type="text" placeholder="Type here" id="input-title">
                 </div>
+                <button id="print" type="button">PRINT</button>
             </form>
-            <section id="certificate">
-                <div id="certificate-inner">
-                    <h1>CERTIFICATE</h1>
-                    <h2 id="certificate-title">OF THE PLACEHOLDER</h2>
-                    <p id="certificate-lead">This informs</p>
-                    <p id="recipient" class="signature">Recipient</p>
-                    <p id="message"></p>
-                    <div id="certificate-footer">
+            <div id="certificate-wrapper">
+                <section id="certificate">
+                    <div id="certificate-inner">
+                        <h1 id="certificate-heading">CERTIFICATE</h1>
+                        <h2 id="certificate-title">OF THE PLACEHOLDER</h2>
+                        <p id="certificate-lead">This informs</p>
+                        <p id="recipient">Recipient</p>
+                        <p id="message">That they should select a certificate from the top of the page.</p>
                         <div id="issuer-wrapper">
-                            <p class="signature" id="issuer">Issuer</p>
-                            <p id="issuer-printed">Issuer</p>
+                            <p id="issuer">Placeholder</p>
+                            <p>Issued By</p>
                             <p id="title">Title</p>
                         </div>
-                        <img src="" alt="">
+                        <img id="certificate-logo" src="Images/icon-placeholder.png" alt="No Sleep Foundation logo">
                         <div id="date-wrapper">
                             <p id="date">11/14/1987</p>
-                            <p>Date</p>
+                            <p>Issue Date</p>
                         </div>
                     </div>
-                </div>
-            </section>
-            <button class="print">PRINT</button>
+                </section>
+            </div>
         </main>
     </div>
     <script src="app.js"></script>

@@ -1,10 +1,57 @@
+
+:root {
+    --gold-shine: linear-gradient(45deg, #B48100, #FFDD86, #B48100);
+    --silver-shine: linear-gradient(45deg, #505050, #ffffff, #505050);
+}
+
+
 * {
     box-sizing: border-box;
 }
 
+body {
+    margin: 0;
+    background-color: #e3ccbb;
+    min-height: 100vh;
+}
+
+label, input {
+    font-family: "Inria Sans", serif;
+    font-size: 1.5rem;
+}
+
+p, h1, h2 {
+    margin: 0;
+}
+
+p {
+    font-family: "Kaisei Decol", serif;
+}
+
+.page-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    min-height: 100vh;
+}
+
+.page-wrapper::before {
+    content: '';
+    background-image: url(Images/body-bg-3.jpg);
+    background-repeat: repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -10;
+    filter: blur(2px) opacity(30%);
+}
+
 header {
     width: 100%;
-    height: 10rem;
+    height: auto;
     background-color: black;
 }
 
@@ -15,19 +62,345 @@ nav {
     height: 100%;
     width: 100%;
     padding: 1rem;
-    gap: 15rem;
-    max-width: 1440px;
+    gap: 1rem;
+    max-width: 1056px;
     margin: auto;
+}
+
+main {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    padding: 2rem 0;
+    margin: auto;
+    justify-content: center;
 }
 
 button {
     background-color: #242424;
-    font-size: 2rem;
-    border-radius: 20px;
+    font-size: 1rem;
+    border-radius: 15px;
     border: solid 1px rgba(255, 255, 255, 0.25);
     color: white;
     padding: 1rem 2rem;
-    min-width: 20rem;
+    min-width: 11rem;
     cursor: pointer;
+    transition: 150ms ease;
 }
 
+nav button {
+    transition: box-shadow 400ms ease;
+}
+
+button:hover {
+    background-color: #333333;
+}
+
+button:active {
+    background-color: #494949;
+}
+
+button.active {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                0 0 50px rgba(255, 255, 255, 0.541);
+    position: relative;
+    z-index: 1;
+}
+
+#certificate-customization {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 845px;
+}
+
+#certificate-customization .input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto 2rem;
+}
+
+#certificate-customization input {
+    width: 100%;
+    padding: 1rem;
+    box-shadow: inset 3px 5px 16px rgba(0, 0, 0, 0.50);
+    border: none;
+    border-radius: 10px;
+    transition: 300ms ease-in-out;
+    background-color: #d8d8d8;
+    min-width: 280px;
+    margin: 0;
+}
+
+#certificate-customization input:focus {
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.50);
+    background-color: #ffffff;
+    transform: scale(1.05);
+    outline: none;
+}
+
+#print {
+    margin: 0 4rem 2rem;
+    width: 100%;
+}
+
+#certificate {
+    width: 1056px;
+    height: 816px;
+    background-image: url(Images/certificate-placeholder.png);
+    position: absolute;
+    transform: scale(.95);
+}
+
+#certificate-wrapper {
+    height: calc(816px * .95);
+    width: calc(1056px * .95);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#certificate-inner {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+#certificate-inner > * {
+    position: absolute;
+}
+
+h1 {
+    font-size: 128px;
+    top: 82px;
+    font-family: "Inria Serif", serif;
+}
+
+#certificate-title {
+    font-size: 48px;
+    top: 231px;
+    font-family: "Inria Serif", serif;
+}
+
+#certificate-lead {
+    font-size: 36px;
+    top: 307px;
+    font-family: "Kaisei Decol", serif;
+}
+
+#recipient {
+    font-size: 96px;
+    top: 360px;
+    font-family: "MonteCarlo", serif;
+    position: relative;
+    min-width: 100px;
+    min-height: 130.4px;
+    padding: 0 20px;
+}
+
+#recipient::after {
+    content: '';
+    position: absolute;
+    height: 3px;
+    bottom: 30px;
+    left: -20px;
+    right: -20px;
+}
+
+#message {
+    font-size: 24px;
+    top: 523px;
+    max-width: 900px;
+    text-align: center;
+}
+
+#issuer-wrapper, #date-wrapper {
+    font-size: 24px;
+    height: 112px;
+    width: 288px;
+    top: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#issuer-wrapper > *, #date-wrapper > * {
+    width: fit-content;
+}
+
+#issuer-wrapper {
+    left: 100px;
+}
+
+#date-wrapper {
+    left: 672px;
+}
+
+#issuer {
+    font-family: "MonteCarlo", serif;
+    position: relative;
+    font-size: 48px;
+    line-height: 3rem;
+    padding: 0 20px;
+}
+
+#date {
+    font-family: "MonteCarlo", serif;
+    position: relative;
+    font-size: 48px;
+    line-height: 3rem;
+    padding: 0 10px;
+}
+
+#issuer::after, #date::after {
+    content: '';
+    position: absolute;
+    height: 3px;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+}
+
+#certificate-logo {
+    left: 465px;
+    top: 602px;
+}
+
+.gold-text {
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--gold-shine);
+}
+
+.gold-line::after {
+    background-image: var(--gold-shine);
+}
+
+.silver-text {
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: var(--silver-shine);
+}
+
+.silver-line::after {
+    background-image: var(--silver-shine);
+}
+
+.black-line::after {
+    background-color: black;
+}
+
+.text-shadow {
+    filter: drop-shadow(0 0 2px black);
+}
+
+
+@media screen and (max-width: 1220px) {
+    #certificate {
+        transform: scale(.9);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .9);
+        width: calc(1056px * .9);
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    #certificate {
+        transform: scale(.8);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .8);
+        width: calc(1056px * .8);
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #certificate {
+        transform: scale(.7);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .7);
+        width: calc(1056px * .7);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #certificate {
+        transform: scale(.6);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .6);
+        width: calc(1056px * .6);
+    }
+}
+
+@media screen and (max-width: 675px) {
+    #certificate {
+        transform: scale(.5);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .5);
+        width: calc(1056px * .5);
+    }
+
+    nav {
+        flex-direction: column;
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    nav button {
+        width: 100%;
+    }
+
+    #certificate-customization {
+        gap: 0;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    #certificate {
+        transform: scale(.4);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .4);
+        width: calc(1056px * .4);
+    }
+}
+
+@media screen and (max-width: 425px) {
+    #certificate {
+        transform: scale(.3);
+    }
+    
+    #certificate-wrapper {
+        height: calc(816px * .3);
+        width: calc(1056px * .3);
+    }
+}
+
+@media print {
+    header, #certificate-customization {
+        display: none;
+    }
+
+    main {
+        margin: 0;
+        padding: 0;
+    }
+}
