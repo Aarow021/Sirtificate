@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
             issuerTitle='Title',
             logoSrc='Images/icon-placeholder.png',
             logoAlt='Placeholder logo',
-            date='11/14/1987',
+            date='11-14-1987',
             colorScheme=[],
             lineColor = 'black',
             shadow = false,
@@ -203,7 +203,7 @@ window.addEventListener("DOMContentLoaded", () => {
     placeholderCertificate.generate();
     
     //Sets certificate date to current date
-    document.getElementById('date').innerText = new Date().toLocaleDateString();
+    document.getElementById('date').innerText = new Date().toLocaleDateString().replaceAll('/', '-');
     updateText('read');
 
     //Adds button handler to certificate buttons

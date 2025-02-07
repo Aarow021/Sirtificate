@@ -187,6 +187,7 @@ h1 {
     font-size: 48px;
     top: 231px;
     font-family: "Inria Serif", serif;
+    padding: 2px;
 }
 
 #certificate-lead {
@@ -302,6 +303,10 @@ h1 {
     filter: drop-shadow(0 0 2px black);
 }
 
+.hidden {
+    display: none;
+}
+
 
 @media screen and (max-width: 1220px) {
     #certificate {
@@ -402,5 +407,9 @@ h1 {
     main {
         margin: 0;
         padding: 0;
+    }
+
+    #certificate {
+        transform: scale(1) translateY(20px);
     }
 }
