@@ -307,6 +307,31 @@ h1 {
     display: none;
 }
 
+#rick-container > * {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    animation: rick-die 2000ms ease-out;
+}
+
+.rick-gif {
+    
+}
+
+.rick-dying {
+    animation: rick-die 1000ms ease;
+}
+
+@keyframes rick-die {
+    from {transform: rotate(0) scale(1); filter: grayscale(0)}
+    to {transform: rotate(90deg) scale(.8); filter: grayscale(1)}
+}
+
+@keyframes rick-spawn {
+    0% {transform: scale(5)}
+    30% {transform: scale(6)}
+    100% {transform: scale(1)}
+}
 
 @media screen and (max-width: 1220px) {
     #certificate {

@@ -95,6 +95,24 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    class Rick {
+        constructor() {
+            let gif = document.createElement('img');
+            let container = document.createElement('div');
+            this.gif = gif;
+            this.container = container;
+            gif.src = 'Images/rick-gif.gif';
+            gif.alt = 'Rick Astley dancing';
+            gif.classList.add('rick-gif');
+            container.classList.add('rick-box');
+            container.appendChild(gif);
+        }
+
+        spawn() {
+            document.getElementById('rick-container').appendChild(this.container);
+        }
+    }
+
     //Generates certificate objects
     let placeholderCertificate = new Certificate();
     let noSleepCertificate = new Certificate(
@@ -184,6 +202,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         else if (btn.id === 'roll') {
             rickCertificate.generate();
+            createRick();
         }
         else if (btn.id === 'brain') {
             brainRotCertificate.generate();
@@ -197,6 +216,11 @@ window.addEventListener("DOMContentLoaded", () => {
         let id = e.target.id;
         document.getElementById(id.substring(6)).innerText = textValue || ' ';
         updateText('read');
+    }
+
+    function createRick() {
+        let newRick = new Rick();
+        newRick.spawn();
     }
 
     //Generates the starting certificate
