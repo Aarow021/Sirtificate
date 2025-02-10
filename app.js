@@ -5,6 +5,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let issuerInput = ' ';
     let titleInput = ' ';
     let dateInput = ' ';
+    let ricks = [];
 
     //Lets async functions halt for a given amount of time.
     //Usage: await sleep(ms);
@@ -15,6 +16,16 @@ window.addEventListener("DOMContentLoaded", () => {
         for (let i = 0; i < dict.length; i++) {
             func(dict[i])
         }
+    }
+
+    //Returns the center of the viewport
+    function getWindowCenter() {
+        return [window.innerWidth/2, window.innerHeight/2];
+    }
+
+    //Returns the number or its outer-bound if the number is outside the bounds
+    function clamp(num, min, max) {
+        return Math.max(Math.min(num, max), min)
     }
 
     //Certificate base class
@@ -95,8 +106,153 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    //Rick object
     class Rick {
-        constructor() {
+        constructor(x=0, y=0, velocity=[0,0], hp=5) {
+            this.x = x;
+            this.y = y;
+            this.maxHP = hp;
+            this.hp = hp;
+            this.velocity = {'x': velocity[0], 'y': velocity[1]};
+            this.#init();
+        }
+
+        //Adds object to page and ricks array
+        spawn() {
+            document.getElementById('rick-container').appendChild(this.container);
+            ricks.push(this);
+        }
+
+        //Deletes object's html component and itself from the ricks array
+        delete() {
+            this.container.remove();
+            let index = ricks.indexOf(this);
+            if (index != -1) ricks.splice(index, 1);
+        }
+
+        //Runs when object gets 'hurt'
+        hurt(dmg) {
+            this.gif.classList.add('rick-hurt');
+            this.hp -= dmg;
+            if (this.hp <= 0) {
+                this.die();
+            }
+        }
+
+        //Returns info relating to client boundingBox
+        getBox() {
+            return this.container.getBoundingClientRect();
+        }
+        getTop() {
+            return this.getBox().top;
+        }
+        getBottom() {
+            return this.getBox().bottom;
+        }
+        getLeft() {
+            return this.getBox().left;
+        }
+        getRight() {
+            return this.getBox().right;
+        }
+
+        //Handles that happens when object container is clicked
+        #clickHandler(e) {
+            this.velocity.y += -20;
+            this.velocity.x += (this.getCenter().x - e.clientX) * .4;
+            this.hurt(1);
+        }
+
+        //Initiates death of object
+        die() {
+            this.gif.classList.add('rick-dying');
+            this.container.style.pointerEvents = 'none';
+        }
+
+        //Handles animation endings
+        animationHandler(e) {
+            let animationName = e.animationName;
+            if (animationName === 'rick-die') {
+                this.delete();
+            } else if (animationName === 'rick-spawn') {
+                this.#physicsLoop();
+                this.container.classList.remove('rick-spawning');
+            } else if (animationName === 'rick-hurt') {
+                this.gif.classList.remove('rick-hurt');
+            }
+        }
+
+        //Returns if this object still exists
+        exists() {
+            return (ricks.indexOf(this) != -1);
+        }
+
+        //Returns if object is touching the left side of screen
+        touchingWallL() {
+            return (this.getLeft() <= 0);
+        }
+
+        //Returns if object is touching the right side of screen
+        touchingWallR() {
+            return (this.getRight() >= window.innerWidth);
+        }
+        
+        //Returns if object is touching the top of screen
+        touchingWallT() {
+            return (this.getTop() <= 0);
+        }
+
+        //Returns if object is touching the bottom of screen
+        touchingWallB() {
+            return (this.getBottom() >= window.innerHeight);
+        }
+
+        //Returns width of object
+        getWidth() {
+            return this.getBox().width;
+        }
+
+        //Returns height of object
+        getHeight() {
+            return this.getBox().height;
+        }
+
+        //Returns center of object
+        getCenter() {
+            let centerX = this.getLeft() + this.getWidth() / 2;
+            let centerY = this.getTop() + this.getHeight() / 2;
+            return {'x': centerX, 'y': centerY};
+        }
+
+        //Updates object's position
+        updatePos() {
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+            this.x = clamp(this.x, 0, window.innerWidth - this.getWidth());
+            this.y = clamp(this.y, 0, window.innerHeight - this.getHeight());
+            if (this.touchingWallL() && this.velocity.x < 0) this.velocity.x = 0;
+            if (this.touchingWallR() && this.velocity.x > 0) this.velocity.x = 0;
+            if (this.touchingWallT() && this.velocity.y < 0) this.velocity.y = 0;
+            if (this.touchingWallB() && this.velocity.y > 0) this.velocity.y = 0;
+            this.container.style.left = `${this.x}px`;
+            this.container.style.top= `${this.y}px`;
+        }
+
+        //Calculates velocity with gravity
+        gravity() {
+            if (this.getBottom() < window.innerHeight) {
+                this.velocity.y += 1;
+            }
+        }
+
+        //Calculates velocity with friction
+        friction() {
+            this.velocity.x *= 0.9;
+            this.velocity.y *= 0.98;
+        }
+
+        //Initializes object
+        #init() {
             let gif = document.createElement('img');
             let container = document.createElement('div');
             this.gif = gif;
@@ -105,12 +261,31 @@ window.addEventListener("DOMContentLoaded", () => {
             gif.alt = 'Rick Astley dancing';
             gif.classList.add('rick-gif');
             container.classList.add('rick-box');
+            container.classList.add('rick-spawning');
             container.appendChild(gif);
+            this.spawn();
+            this.container.style.left = `${this.x}px`;
+            this.container.style.top= `${this.y}px`;
+            this.container.addEventListener('mousedown', e => this.#clickHandler(e));
+            this.gif.addEventListener('animationend', e => this.animationHandler(e));
+            this.container.addEventListener('animationend', e => this.animationHandler(e));
         }
 
-        spawn() {
-            document.getElementById('rick-container').appendChild(this.container);
+
+        async #physicsLoop() {
+            while (this.exists()) {
+                this.gravity();
+                this.friction();
+                this.updatePos();
+                await sleep(20);
+            }
         }
+
+    }
+
+    //Creates a rick instance
+    function createRick() {
+        let newRick = new Rick(getWindowCenter()[0] - 169/2, getWindowCenter()[1] - 189/2);
     }
 
     //Generates certificate objects
@@ -211,16 +386,12 @@ window.addEventListener("DOMContentLoaded", () => {
         updateText();
     }
 
+    //Updates certificate text when user inputs
     function inputHandler(e) {
         let textValue = e.target.value;
         let id = e.target.id;
         document.getElementById(id.substring(6)).innerText = textValue || ' ';
         updateText('read');
-    }
-
-    function createRick() {
-        let newRick = new Rick();
-        newRick.spawn();
     }
 
     //Generates the starting certificate

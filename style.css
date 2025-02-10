@@ -89,6 +89,8 @@ button {
 }
 
 nav button {
+    position: relative;
+    z-index: 3;
     transition: box-shadow 400ms ease;
 }
 
@@ -152,6 +154,7 @@ button.active {
     background-image: url(Images/certificate-placeholder.png);
     position: absolute;
     transform: scale(.95);
+    user-select: none;
 }
 
 #certificate-wrapper {
@@ -307,24 +310,44 @@ h1 {
     display: none;
 }
 
-#rick-container > * {
+.rick-box {
     position: fixed;
-    left: 50%;
-    top: 50%;
-    animation: rick-die 2000ms ease-out;
+    width: 169px;
+    height: 189px;
+}
+
+.rick-box:not(.rick-spawning) {
+    z-index: 5;
+}
+
+.rick-spawning {
+    z-index: 2;
+    animation: rick-spawn 2000ms ease;
+    pointer-events: none;
 }
 
 .rick-gif {
-    
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.rick-hurt {
+    animation: rick-hurt 150ms ease;
 }
 
 .rick-dying {
-    animation: rick-die 1000ms ease;
+    animation: rick-die 500ms ease-out;
 }
+
 
 @keyframes rick-die {
     from {transform: rotate(0) scale(1); filter: grayscale(0)}
     to {transform: rotate(90deg) scale(.8); filter: grayscale(1)}
+}
+
+@keyframes rick-hurt {
+    from {filter:  opacity(.5) drop-shadow(0 0 0 red)}
+    to {filter:  opacity(1) drop-shadow(0 0 0 red)}
 }
 
 @keyframes rick-spawn {
@@ -436,5 +459,9 @@ h1 {
 
     #certificate {
         transform: scale(1) translateY(20px);
+    }
+
+    #rick-container {
+        display: none;
     }
 }
