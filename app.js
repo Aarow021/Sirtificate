@@ -6,6 +6,12 @@ window.addEventListener("DOMContentLoaded", () => {
     let titleInput = ' ';
     let dateInput = ' ';
     let ricks = [];
+    let ricksCreated = 0;
+    let score = 0;
+    let scoreDisplay;
+    let comboDisplay;
+    let combo = 0;
+    let numAirborn = 0;
 
     //Lets async functions halt for a given amount of time.
     //Usage: await sleep(ms);
@@ -114,6 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
             this.maxHP = hp;
             this.hp = hp;
             this.velocity = {'x': velocity[0], 'y': velocity[1]};
+            this.airborn = false;
             this.#init();
         }
 
@@ -134,9 +141,16 @@ window.addEventListener("DOMContentLoaded", () => {
         hurt(dmg) {
             this.gif.classList.add('rick-hurt');
             this.hp -= dmg;
+            this.healthBar.innerText = `HP:${this.hp}/${this.maxHP}`
+            this.healthBar.style.textShadow = '-1px -1px 0 ' + this.getHPColor();
             if (this.hp <= 0) {
                 this.die();
             }
+        }
+
+        getHPColor() {
+            let percent = this.hp / this.maxHP;
+            return `rgb(${clamp(255 * (1 - percent) * 2, 0, 255)}, ${clamp(255 * percent * 2, 0, 255)}, 0)`;
         }
 
         //Returns info relating to client boundingBox
@@ -161,12 +175,20 @@ window.addEventListener("DOMContentLoaded", () => {
             this.velocity.y += -20;
             this.velocity.x += (this.getCenter().x - e.clientX) * .4;
             this.hurt(1);
+            combo += 1;
+            this.updateCombo();
+        }
+
+        updateCombo() {
+            document.querySelector('.combo').innerText = `Combo: ${combo}`;
         }
 
         //Initiates death of object
         die() {
+            score++;
             this.gif.classList.add('rick-dying');
             this.container.style.pointerEvents = 'none';
+            scoreDisplay.innerText = `Ricks Defeated: ${score}`;
         }
 
         //Handles animation endings
@@ -230,10 +252,19 @@ window.addEventListener("DOMContentLoaded", () => {
             this.y += this.velocity.y;
             this.x = clamp(this.x, 0, window.innerWidth - this.getWidth());
             this.y = clamp(this.y, 0, window.innerHeight - this.getHeight());
+
+            if (this.touchingWallB() && this.velocity.y > 0 && combo > 0) {
+                combo = 0;
+                this.updateCombo();
+            }
+
             if (this.touchingWallL() && this.velocity.x < 0) this.velocity.x = 0;
             if (this.touchingWallR() && this.velocity.x > 0) this.velocity.x = 0;
             if (this.touchingWallT() && this.velocity.y < 0) this.velocity.y = 0;
-            if (this.touchingWallB() && this.velocity.y > 0) this.velocity.y = 0;
+            if (this.touchingWallB() && this.velocity.y > 0) {
+                this.velocity.y = 0;
+                if (this.airborn) this.airborn = false;
+            }
             this.container.style.left = `${this.x}px`;
             this.container.style.top= `${this.y}px`;
         }
@@ -255,13 +286,17 @@ window.addEventListener("DOMContentLoaded", () => {
         #init() {
             let gif = document.createElement('img');
             let container = document.createElement('div');
+            let healthBar = document.createElement('p');
             this.gif = gif;
             this.container = container;
+            this.healthBar = healthBar;
             gif.src = 'Images/rick-gif.gif';
             gif.alt = 'Rick Astley dancing';
             gif.classList.add('rick-gif');
             container.classList.add('rick-box');
             container.classList.add('rick-spawning');
+            healthBar.classList.add('rick-hp');
+            container.appendChild(healthBar);
             container.appendChild(gif);
             this.spawn();
             this.container.style.left = `${this.x}px`;
@@ -271,7 +306,7 @@ window.addEventListener("DOMContentLoaded", () => {
             this.container.addEventListener('animationend', e => this.animationHandler(e));
         }
 
-
+        //Calculates position of object with physics in consideration
         async #physicsLoop() {
             while (this.exists()) {
                 this.gravity();
@@ -283,9 +318,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    //Creates a rick instance
+    //Creates a rick instance (and scoreboard if first rick created)
     function createRick() {
-        let newRick = new Rick(getWindowCenter()[0] - 169/2, getWindowCenter()[1] - 189/2);
+        if (ricksCreated === 0) {
+            scoreDisplay = document.createElement('p');
+            scoreDisplay.classList.add('score');
+            scoreDisplay.innerText = 'Ricks Defeated: 0';
+            comboDisplay = document.createElement('p');
+            comboDisplay.classList.add('combo');
+            comboDisplay.innerText = 'Combo: 0';
+            document.querySelector('.score-board').appendChild(scoreDisplay);
+            document.querySelector('.score-board').appendChild(comboDisplay);
+        }
+
+        ricksCreated++;
+        let newRick = new Rick(
+            Math.random() * (window.innerWidth - 169/2),
+            getWindowCenter()[1] - 189/2,
+            [0, 0],
+            ricksCreated + 1
+        );
     }
 
     //Generates certificate objects
@@ -356,6 +408,10 @@ window.addEventListener("DOMContentLoaded", () => {
     function buttonHandler(e) {
         let btn = e.target;
 
+        if (btn.id === 'roll') {
+            createRick();
+        }
+
         //Toggles current button's state, removes active from other buttons
         if (btn.className.includes('active')) {
             btn.classList.remove('active');
@@ -377,7 +433,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         else if (btn.id === 'roll') {
             rickCertificate.generate();
-            createRick();
         }
         else if (btn.id === 'brain') {
             brainRotCertificate.generate();
