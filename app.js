@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let scoreDisplay;
     let comboDisplay;
     let combo = 0;
-    let numAirborn = 0;
+    let numAirborn = 0; //Unused, intended to give combo multi
 
     //Lets async functions halt for a given amount of time.
     //Usage: await sleep(ms);
@@ -148,6 +148,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        //Returns an rgb string that represents the health percentage of object
         getHPColor() {
             let percent = this.hp / this.maxHP;
             return `rgb(${clamp(255 * (1 - percent) * 2, 0, 255)}, ${clamp(255 * percent * 2, 0, 255)}, 0)`;
@@ -179,6 +180,7 @@ window.addEventListener("DOMContentLoaded", () => {
             this.updateCombo();
         }
 
+        //Updates combo on document
         updateCombo() {
             document.querySelector('.combo').innerText = `Combo: ${combo}`;
         }
