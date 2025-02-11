@@ -481,7 +481,7 @@ footer p {
 }
 
 @media print {
-    header, #certificate-customization {
+    header, #certificate-customization, footer, .score-board, #rick-container{
         display: none;
     }
 
@@ -492,9 +492,5 @@ footer p {
 
     #certificate {
         transform: scale(1) translateY(20px);
-    }
-
-    #rick-container {
-        display: none;
     }
 }
